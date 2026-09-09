@@ -1,0 +1,166 @@
+:host {
+  --ink: #17242a;
+  --muted: #66767b;
+  --paper: #f6f4ed;
+  --panel: rgba(255, 255, 255, 0.84);
+  --line: #dce3df;
+  --accent: #d95d39;
+  --accent-deep: #a8442a;
+
+  display: block;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(240, 190, 116, 0.38), transparent 30rem),
+    radial-gradient(circle at 100% 100%, rgba(180, 215, 197, 0.44), transparent 28rem), var(--paper);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+main {
+  box-sizing: border-box;
+  width: min(100% - 2rem, 58rem);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 7vw, 6.5rem) 0 3rem;
+}
+
+h1 {
+  max-width: 42rem;
+  margin: 0 0 2rem;
+  color: var(--ink);
+  font-size: clamp(2.7rem, 8vw, 5.8rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+}
+
+app-chat-stream {
+  display: block;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 1.25rem;
+  background: var(--panel);
+  box-shadow: 0 1.5rem 4rem rgba(42, 61, 57, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+app-chat-stream form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.8rem;
+  align-items: end;
+}
+
+app-chat-stream label {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+app-chat-stream textarea {
+  box-sizing: border-box;
+  min-height: 3.4rem;
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  padding: 0.9rem 1rem;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.74);
+  font:
+    1rem/1.45 Georgia,
+    'Times New Roman',
+    serif;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+app-chat-stream textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(217, 93, 57, 0.14);
+}
+
+app-chat-stream button {
+  min-height: 3.4rem;
+  border: 0;
+  border-radius: 0.7rem;
+  padding: 0 1.15rem;
+  color: #fffaf4;
+  background: var(--accent);
+  cursor: pointer;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+app-chat-stream button:hover:not(:disabled) {
+  background: var(--accent-deep);
+  transform: translateY(-1px);
+}
+
+app-chat-stream button[type='button'] {
+  color: var(--ink);
+  background: #e8eeea;
+}
+
+app-chat-stream button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+app-chat-stream p {
+  margin: 1.5rem 0 0.6rem;
+  color: var(--muted);
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+app-chat-stream pre {
+  min-height: 12rem;
+  margin: 0;
+  overflow: auto;
+  border-radius: 0.8rem;
+  padding: 1.2rem;
+  color: #dbe8df;
+  background: #17242a;
+  font:
+    0.95rem/1.65 Consolas,
+    monospace;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 40rem) {
+  main {
+    width: min(100% - 1.25rem, 58rem);
+    padding-top: 2.5rem;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  app-chat-stream form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  app-chat-stream textarea,
+  app-chat-stream label {
+    grid-column: 1 / -1;
+  }
+
+  app-chat-stream button {
+    width: 100%;
+  }
+}

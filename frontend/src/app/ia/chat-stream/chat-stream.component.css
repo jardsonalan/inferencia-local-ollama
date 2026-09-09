@@ -1,0 +1,115 @@
+:host {
+  display: block;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.8rem;
+  align-items: end;
+}
+
+label {
+  grid-column: 1 / -1;
+  color: #66767b;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+textarea {
+  box-sizing: border-box;
+  min-height: 3.4rem;
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #dce3df;
+  border-radius: 0.7rem;
+  padding: 0.9rem 1rem;
+  color: #17242a;
+  background: rgba(255, 255, 255, 0.74);
+  font:
+    1rem/1.45 Georgia,
+    'Times New Roman',
+    serif;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+textarea:focus {
+  border-color: #d95d39;
+  box-shadow: 0 0 0 3px rgba(217, 93, 57, 0.14);
+}
+
+button {
+  min-height: 3.4rem;
+  border: 0;
+  border-radius: 0.7rem;
+  padding: 0 1.15rem;
+  color: #fffaf4;
+  background: #d95d39;
+  cursor: pointer;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: #a8442a;
+  transform: translateY(-1px);
+}
+
+button[type='button'] {
+  color: #17242a;
+  background: #e8eeea;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+p {
+  margin: 1.5rem 0 0.6rem;
+  color: #66767b;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+pre {
+  min-height: 12rem;
+  margin: 0;
+  overflow: auto;
+  border-radius: 0.8rem;
+  padding: 1.2rem;
+  color: #dbe8df;
+  background: #17242a;
+  font:
+    0.95rem/1.65 Consolas,
+    monospace;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 40rem) {
+  form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  textarea,
+  label {
+    grid-column: 1 / -1;
+  }
+
+  button {
+    width: 100%;
+  }
+}
