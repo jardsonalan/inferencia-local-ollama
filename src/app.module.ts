@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ChamadosModule } from './chamados/chamados.module';
+import { ChamadosModule } from './ia/chamados/chamados.module';
 import { IaModule } from './ia/ia.module';
 
 @Module({
