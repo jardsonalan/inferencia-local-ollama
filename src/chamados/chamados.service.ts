@@ -2,7 +2,7 @@ import { BadGatewayException, Inject, Injectable } from '@nestjs/common';
 import {
   MODELO_PROVIDER,
   type ModeloProvider,
-} from '../providers/modelo.provider';
+} from '../ia/providers/modelo.provider';
 import {
   CHAMADO_CATEGORIAS,
   isCategoriaPermitida,
