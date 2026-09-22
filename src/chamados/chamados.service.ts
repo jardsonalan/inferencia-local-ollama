@@ -3,11 +3,14 @@ import {
   MODELO_PROVIDER,
   type ModeloProvider,
 } from '../ia/providers/modelo.provider';
-import {
-  CHAMADO_CATEGORIAS,
-  isCategoriaPermitida,
-  normalizarCategoria,
-} from './chamado-categoria';
+import { isChamadoCategoria, type ChamadoCategoria } from './chamado-categoria';
+import { buildClassificacaoPrompt } from './classificacao.prompt';
+
+export interface ClassificacaoResultado {
+  texto: string;
+  categoria: ChamadoCategoria;
+  modelo: string;
+}
 
 @Injectable()
 export class ChamadosService {
@@ -16,24 +19,18 @@ export class ChamadosService {
     private readonly modelo: ModeloProvider,
   ) {}
 
-  async classificar(texto: string) {
-    const textoNormalizado = texto.trim();
+  async classificar(textoOriginal: string): Promise<ClassificacaoResultado> {
+    const texto = textoOriginal.trim();
+    const prompt = buildClassificacaoPrompt(texto);
+    const resultado = await this.modelo.gerar({ mensagem: prompt });
+    const categoria = resultado.resposta.trim().toUpperCase();
 
-    const resultado = await this.modelo.gerar({
-      mensagem:
-        `Classifique o chamado em uma destas categorias: ${CHAMADO_CATEGORIAS.join(', ')}.\n` +
-        `Responda somente com uma categoria.\n\n` +
-        textoNormalizado,
-    });
-
-    const categoria = normalizarCategoria(resultado.resposta);
-
-    if (!isCategoriaPermitida(categoria)) {
+    if (!isChamadoCategoria(categoria)) {
       throw new BadGatewayException('O modelo retornou uma categoria inválida');
     }
 
     return {
-      texto: textoNormalizado,
+      texto,
       categoria,
       modelo: resultado.modelo,
     };

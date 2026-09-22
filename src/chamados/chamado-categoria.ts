@@ -15,3 +15,7 @@ export function isCategoriaPermitida(valor: string): valor is ChamadoCategoria {
 export function normalizarCategoria(resposta: string): string {
   return resposta.trim().toUpperCase();
 }
+
+export function isChamadoCategoria(value: string): value is ChamadoCategoria {
+  return CHAMADO_CATEGORIAS.includes(value as ChamadoCategoria);
+}
