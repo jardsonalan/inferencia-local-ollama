@@ -1,114 +1,140 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Inferência local com Ollama
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Aplicação para classificação de chamados usando um modelo de linguagem executado localmente pelo [Ollama](https://ollama.com/). O projeto possui uma API em NestJS, um cliente web em Angular e uma rotina automatizada para avaliar a classificação em diferentes cenários.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Visão geral
 
-## Description
+- **Backend:** NestJS e TypeScript.
+- **Frontend:** Angular.
+- **Inferência:** Ollama, com modelo configurável por variável de ambiente.
+- **Orquestração:** Docker Compose.
+- **Categorias:** `ACESSO`, `FINANCEIRO`, `MATRICULA`, `DOCUMENTOS` e `OUTROS`.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+O backend envia o texto do chamado ao Ollama por meio de um prompt que restringe as categorias possíveis, exige resposta em letras maiúsculas e orienta o modelo a não seguir instruções contidas no próprio chamado.
 
-## Project setup
+## Pré-requisitos
+
+- Node.js e npm;
+- Docker e Docker Compose, para executar o Ollama e os serviços em contêineres;
+- um modelo disponível no Ollama, por exemplo `llama3.2:latest`.
+
+## Configuração
+
+Instale as dependências do backend:
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+Para instalar as dependências do frontend:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cd frontend
+npm install
+cd ..
 ```
 
-## Run tests
+As principais variáveis de ambiente do backend são:
+
+| Variável | Padrão | Descrição |
+| --- | --- | --- |
+| `PORT` | `3000` | Porta da API |
+| `OLLAMA_BASE_URL` | depende do ambiente | URL do serviço Ollama |
+| `OLLAMA_MODEL` | `llama3.2:latest` no Docker Compose | Modelo usado na inferência |
+| `OLLAMA_TIMEOUT_MS` | `30000` | Tempo limite das requisições ao Ollama |
+
+## Execução com Docker Compose
+
+Suba os serviços:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker compose up --build
 ```
 
-## Deployment
+Os serviços ficam disponíveis em:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- Frontend: `http://localhost:4200`
+- API: `http://localhost:3000`
+- Ollama: `http://localhost:11434`
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Em outro terminal, baixe o modelo configurado:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker exec -it ollama ollama pull llama3.2:latest
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Para encerrar os serviços:
 
-## Observability
+```bash
+docker compose down
+```
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+## Execução local
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+Inicie o backend em modo de desenvolvimento:
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+```bash
+npm run start:dev
+```
 
-## Resources
+Inicie o frontend em outro terminal:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+cd frontend
+npm start
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Quando o backend for executado fora do Docker, configure `OLLAMA_BASE_URL` para `http://localhost:11434`.
 
-## Support
+## API
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Classificar chamado
 
-## Stay in touch
+`POST /chamados/classificar`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Corpo da requisição:
 
-## License
+```json
+{
+  "texto": "Minha senha expirou e não consigo entrar."
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+A resposta contém a categoria atribuída pelo modelo.
+
+## Avaliação
+
+A rotina de avaliação executa os casos definidos em `src/chamados/avaliacao/casos-avaliacao.ts`, compara a categoria obtida com a esperada e grava o relatório em `resultado-avaliacao.json`.
+
+```bash
+npm run avaliar:chamados
+```
+
+O relatório apresenta a acurácia, a conformidade do formato, a duração de cada chamada e o resultado individual dos casos. A bateria atualmente cobre casos normais, de fronteira, de ausência de informação e adversariais.
+
+## Testes e qualidade
+
+```bash
+# Testes unitários
+npm test
+
+# Testes unitários com cobertura
+npm run test:cov
+
+# Testes ponta a ponta
+npm run test:e2e
+
+# Lint
+npm run lint
+
+# Build do backend
+npm run build
+```
+
+## Conclusão técnica
+
+A atividade documentou a execução e a avaliação de um sistema de categorização (utilizando Ollama) submetido a quatro cenários de teste: um caso normal (categoria esperada: MATRICULA), uma negação (categoria esperada: ACESSO), um texto com pouca informação (categoria esperada: OUTROS) e uma instrução maliciosa dentro do chamado (categoria esperada: OUTROS). Após a primeira rodada de testes unitários em contêiner e o registro da acurácia, o autor identificou uma falha e propôs um ajuste no sistema.
+
+A intervenção realizada consistiu em uma alteração direta no início do prompt, com a justificativa de tornar o real motivo da solicitação mais explícito para o modelo de inteligência artificial. Contudo, a reexecução completa da bateria de testes evidenciou uma total ausência de efeito prático dessa modificação. Os resultados obtidos pelo avaliador persistiram exatamente iguais aos fornecidos na execução anterior, não ocorrendo nenhuma mudança comportamental por parte do sistema em nenhum dos cenários.
+
+Conclui-se, portanto, que a alteração redacional introduzida no prompt foi insuficiente para corrigir a falha observada ou alterar as inferências do modelo. A persistência dos resultados indica que o modelo necessita de estratégias de engenharia de prompt mais complexas (como *few-shot prompting* ou regras de formatação mais rígidas) para superar falhas em cenários atípicos e de injeção maliciosa.
